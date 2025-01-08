@@ -33,16 +33,21 @@ const registerUser = async (req, res) => {
 
     try {
         const userExist = await Users.findOne({ email })
-        if (userExist) return res.json({ message: "Email already exist" })
+        if (userExist) {
+            throw new Error("Email already exists");
+        }
         const user = await Users.create({ name, password, email })
         res.json({
             message: "User created",
             user,
         })
     } catch (error) {
+        if (error.message) return res.status(500).json({
+            message: error.message,
+        })
         res.status(500).json({
             message: "Internal server error",
-            error
+            error,
         })
     }
 }
