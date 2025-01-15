@@ -1,24 +1,51 @@
 import axios from 'axios'
 import React, { useRef, useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import { ToastContainer, toast } from 'react-toastify';
+import { useUser } from '../context/userContext';
+import { instance } from '../utils/axiosIstance';
+
 const Login = () => {
     const [loading, setLoading] = useState(false)
+
+    const { setUser } = useUser()
 
     const email = useRef()
     const password = useRef()
 
+    const navigate = useNavigate()
+
     const handleLogin = async (e) => {
         e.preventDefault();
-
         setLoading(true)
         try {
             const { data } = await axios.post(`${import.meta.env.VITE_API_URL}loginuser`, {
                 email: email.current.value,
                 password: password.current.value
-            })
+            },
+                // can pass headers here
+            )
             console.log(data)
+            setUser({ ...data.user })
+            localStorage.setItem("user", JSON.stringify(data.user))
+            localStorage.setItem("authTokens", JSON.stringify({
+                accessToken: data.accessToken,
+                refreshToken: data.refreshToken
+            }))
+            toast.success('Login Successfull !', {
+                autoClose: 2500,
+                pauseOnHover: false,
+                pauseOnFocusLoss: false
+            })
+            setTimeout(() => {
+                navigate("/")
+            }, 2000)
         } catch (error) {
-            console.log(error.response.data)
+            console.log(error)
+            toast.error(error.response.data.message, {
+                autoClose: 2500,
+                pauseOnHover: false,
+            })
         } finally {
             setLoading(false)
         }
@@ -27,6 +54,7 @@ const Login = () => {
     return (
         <div>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+                <ToastContainer />
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <img
                         alt="Your Company"

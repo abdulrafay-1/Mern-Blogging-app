@@ -14,7 +14,7 @@ const generateAccessToken = (user) => {
     return jwt.sign(
         { email: user.email, password: user.password }
         , process.env.ACCESS_JWT_SECRET,
-        { expiresIn: '6h' }
+        { expiresIn: 60 }
     )
 }
 const getAllUsers = async (req, res) => {
@@ -61,10 +61,14 @@ const loginUser = async (req, res) => {
 
     try {
         const user = await Users.findOne({ email })
-        if (!user) return res.json({ message: "User not registered", });
+        if (!user) {
+            throw new Error("User not registered");
+        }
 
         const isPassCorrect = await bcrypt.compare(password, user.password);
-        if (!isPassCorrect) return res.json({ message: "Incorrect Password", });
+        if (!isPassCorrect) {
+            throw new Error("Incorrect Password")
+        };
 
         const accessToken = generateAccessToken(user)
         const refreshToken = generateRefreshToken(user)
@@ -78,6 +82,9 @@ const loginUser = async (req, res) => {
             user,
         })
     } catch (error) {
+        if (error.message) return res.status(500).json({
+            message: error.message,
+        })
         res.status(500).json({
             message: "Internal server error",
             error
@@ -112,16 +119,6 @@ const regenerateAccessToken = async (req, res) => {
     }
 }
 
-const authenticateUser = (req, res, next) => {
-    const token = req.headers["authorization"];
-    if (!token) return res.status(404).json({ message: "No token found" });
 
-    jwt.verify(token, process.env.ACCESS_JWT_SECRET, (err, user) => {
-        if (err) return res.status(403).json({ message: "invalid token" });
-        console.log("authenticate user ===> ", user)
-        req.user = user
-        next();
-    })
-}
 
-export { registerUser, getAllUsers, loginUser, logout, regenerateAccessToken, authenticateUser }
+export { registerUser, getAllUsers, loginUser, logout, regenerateAccessToken, }

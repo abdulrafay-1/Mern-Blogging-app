@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { toast, ToastContainer } from "react-toastify";
+import { instance } from "../utils/axiosIstance";
 
 const Register = () => {
     const [loading, setLoading] = useState(false)
@@ -15,16 +17,22 @@ const Register = () => {
         e.preventDefault();
         setLoading(true)
         try {
-            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}user`, {
+            const { data } = await instance.post(`user`, {
                 name: name.current.value,
                 email: email.current.value,
                 password: password.current.value
             })
             console.log(data)
-            navigate("/login")
+            toast.success('Register Successfull !', {
+                autoClose: 2500,
+                pauseOnHover: false,
+                pauseOnFocusLoss: false
+            })
+            setTimeout(() => {
+                navigate("/")
+            }, 2000)
         } catch (error) {
-            // console.log(error.response.data)
-            console.log("user already exist")
+            console.log(error.response.data)
         } finally {
             setLoading(false)
         }
@@ -32,6 +40,7 @@ const Register = () => {
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-50">
+            <ToastContainer />
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
                 <div className="flex justify-center">
                     <div className="text-blue-600 text-4xl font-bold">
