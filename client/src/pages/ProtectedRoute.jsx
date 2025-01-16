@@ -23,6 +23,7 @@ const ProtectedRoute = ({ children }) => {
                 logout()
             }
         } else {
+            logout()
             navigate("/login")
         }
     }

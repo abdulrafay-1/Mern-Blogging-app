@@ -71,12 +71,12 @@ const Navbar = () => {
                             {`Welcome ${user.name.toUpperCase()} !`}
                         </p>
 
-                        <p
+                        <button
                             onClick={logout}
                             className="hover:cursor-pointer text-sm md:text-base border px-3 py-1 rounded-md"
                         >
                             Logout
-                        </p>
+                        </button>
                     </>
                 ) : (
                     <Link to={"/login"}>

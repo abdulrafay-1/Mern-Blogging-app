@@ -78,7 +78,17 @@ const likeBlog = async (req, res) => {
         message: "user id is required"
     })
     try {
-        const blog = await Blog.findByIdAndUpdate(id, { $push: { likes: author } }, { new: true });
+        const blog = await Blog.findByIdAndUpdate(id, { $push: { likes: author } }, { new: true })
+            .populate('author', 'name')
+            .populate('likes', 'name')
+            .populate({
+                path: "comments",
+                select: "text",
+                populate: {
+                    path: "author",
+                    select: "name"
+                }
+            })
         if (!blog) return res.status(404).json({ message: "Blog not found" });
         res.json({ message: "blog liked", blog });
     } catch (err) {
