@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router';
 import useLogout from '../hooks/logoutUser';
 import axios from 'axios';
+import { instance } from '../utils/axiosIstance';
 
 const ProtectedRoute = ({ children }) => {
     const navigate = useNavigate()
@@ -11,12 +12,8 @@ const ProtectedRoute = ({ children }) => {
     const checkTokens = async () => {
         if (authTokens) {
             try {
-                const authenticate = await axios.post(`${import.meta.env.VITE_API_URL}authenticate`, {}, {
-                    headers: {
-                        'authorization': `${authTokens.accessToken}`
-                    }
+                await instance.post(`${import.meta.env.VITE_API_URL}authenticate`, {}, {
                 })
-                console.log(authenticate)
             } catch (error) {
                 console.log(error)
                 navigate("/login")

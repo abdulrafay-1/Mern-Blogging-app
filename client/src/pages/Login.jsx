@@ -25,7 +25,6 @@ const Login = () => {
             },
                 // can pass headers here
             )
-            console.log(data)
             setUser({ ...data.user })
             localStorage.setItem("user", JSON.stringify(data.user))
             localStorage.setItem("authTokens", JSON.stringify({

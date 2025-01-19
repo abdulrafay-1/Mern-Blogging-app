@@ -6,7 +6,7 @@ const generateRefreshToken = (user) => {
     return jwt.sign(
         { email: user.email, password: user.password }
         , process.env.REFRESH_JWT_SECRET,
-        { expiresIn: '7d' }
+        { expiresIn: "7d" }
     )
 }
 
@@ -14,7 +14,7 @@ const generateAccessToken = (user) => {
     return jwt.sign(
         { email: user.email, password: user.password }
         , process.env.ACCESS_JWT_SECRET,
-        { expiresIn: 60 }
+        { expiresIn: "6h" }
     )
 }
 const getAllUsers = async (req, res) => {

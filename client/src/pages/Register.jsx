@@ -22,7 +22,6 @@ const Register = () => {
                 email: email.current.value,
                 password: password.current.value
             })
-            console.log(data)
             toast.success('Register Successfull !', {
                 autoClose: 2500,
                 pauseOnHover: false,

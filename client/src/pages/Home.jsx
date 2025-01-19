@@ -8,6 +8,7 @@ const Home = () => {
     const description = useRef();
     const [blogLoading, setBlogsLoading] = useState(false)
     const [commentLoading, setCommentLoading] = useState(false)
+    const [likeLoading, setLikeLoading] = useState(false)
 
     const { user, setBlogs, blogs } = useUser();
 
@@ -23,7 +24,6 @@ const Home = () => {
         try {
             const { data } = await instance.post("/blog", blog);
             setBlogs([{ ...data.blog, author: { name: user.name } }, ...blogs]);
-            console.log(data)
             toast.success("Blog added successfully", { autoClose: 2500 })
         }
         catch (e) { console.log(e) }
@@ -65,16 +65,21 @@ const Home = () => {
 
     };
 
-    const likePost = async (id) => {
-        try {
-            const { data } = await instance.post(`/likeblog/${id}`, {
-                author: user._id,
-            });
-            console.log(data)
-            const newData = blogs.map(item => item._id === id ? data.blog : item);
-            setBlogs([...newData]);
-        } catch (error) {
-            console.log(error);
+    const likePost = async (blog) => {
+        const postLiked = blog.likes.find(like => like._id === user._id)
+        if (!postLiked) {
+            setLikeLoading(true)
+            try {
+                const { data } = await instance.post(`/likeblog/${blog._id}`, {
+                    author: user._id,
+                });
+                const newData = blogs.map(item => item._id === blog._id ? data.blog : item);
+                setBlogs([...newData]);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLikeLoading(false)
+            }
         }
     };
 
@@ -98,15 +103,13 @@ const Home = () => {
                                 <div>
                                     <h3 className="text-xl font-semibold">{blog.title}</h3>
                                 </div>
-                                <div className="flex items-center space-x-4">
-                                    <p className="text-sm text-gray-500">By {blog.author.name}</p>
-                                    <button onClick={() => likePost(blog._id)} className="flex items-center space-x-2 text-red-500">
-                                        <img src="/heart.svg" alt="like" className="w-5 h-5" />
-                                        <span>{blog.likes.length}</span>
-                                    </button>
-                                </div>
+                                <button disabled={likeLoading} onClick={() => likePost(blog)} className="flex items-center space-x-1 text-red-500">
+                                    <img src={blog.likes.some(like => like._id === user._id) ? "./heart-fill.svg" : "./heart.svg"} alt="like" className="w-5 h-5" />
+                                    <span>{blog.likes.length}</span>
+                                </button>
                             </div>
-                            <p className="mt-2 text-gray-600">{blog.description}</p>
+                            <p className="text-sm text-gray-500">By {blog.author.name}</p>
+                            <p className="mt-2 text-gray-800">{blog.description}</p>
                             <form onSubmit={(e) => addComment(e, blog._id)} className="flex items-center mt-4 space-x-2">
                                 <input name='comment' required placeholder="Add a comment..." className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400" />
                                 <button type="submit" disabled={commentLoading} className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 disabled:opacity-50">Add</button>
@@ -121,6 +124,8 @@ const Home = () => {
                             </div>
                         </div>
                     ))}
+
+
                 </div>
             </div>
         </div>

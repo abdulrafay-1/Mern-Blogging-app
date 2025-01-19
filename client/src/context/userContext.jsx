@@ -16,7 +16,6 @@ const UserProvider = ({ children }) => {
         if (localUser) {
             setUser(localUser)
         }
-        console.log("use effect chala")
     }, [])
 
     return (
