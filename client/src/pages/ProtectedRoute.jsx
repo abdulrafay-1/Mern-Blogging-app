@@ -16,11 +16,11 @@ const ProtectedRoute = ({ children }) => {
                 })
             } catch (error) {
                 console.log(error)
-                navigate("/login")
                 logout()
             }
         } else {
-            logout()
+            localStorage.removeItem("authTokens");
+            localStorage.removeItem("user");
             navigate("/login")
         }
     }

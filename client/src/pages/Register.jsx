@@ -28,8 +28,8 @@ const Register = () => {
                 pauseOnFocusLoss: false
             })
             setTimeout(() => {
-                navigate("/")
-            }, 2000)
+                navigate("/login")
+            }, 1000)
         } catch (error) {
             console.log(error.response.data)
         } finally {
