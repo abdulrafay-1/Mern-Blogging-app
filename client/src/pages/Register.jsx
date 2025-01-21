@@ -43,11 +43,11 @@ const Register = () => {
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
                 <div className="flex justify-center">
                     <div className="text-blue-600 text-4xl font-bold">
-                        <span>🌊</span> {/* Add a logo or icon */}
+                        <span>Blogging App</span> {/* Add a logo or icon */}
                     </div>
                 </div>
                 <h2 className="text-center text-2xl font-bold text-gray-900">
-                    Create your account
+                    Register
                 </h2>
                 <form className="mt-8 space-y-4" onSubmit={handleRegister}>
                     <div>
