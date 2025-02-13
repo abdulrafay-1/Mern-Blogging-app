@@ -88,6 +88,16 @@ const Home = () => {
             }
         }
     };
+    const deleteBlog = async (blogID) => {
+        const newData = blogs.filter((item) => item._id !== blogID);
+        setBlogs([...newData]);
+        try {
+            await instance.delete(`/blog/${blogID}`);
+            toast.success("Blog deleted successfully", { autoClose: 2500 });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-200 to-gray-300 py-10 px-4">
@@ -133,73 +143,8 @@ const Home = () => {
                             commentLoading={commentLoading}
                             commmentBlogFnc={addComment}
                             likeBlogFnc={() => likePost(blog)}
+                            deleteBlogFnc={() => deleteBlog(blog._id)}
                         />
-                        // <div
-                        //     key={blog._id}
-                        //     className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-                        // >
-                        //     <div className="flex justify-between items-center">
-                        //         <div>
-                        //             <h3 className="text-2xl font-bold text-gray-800">
-                        //                 {blog.title}
-                        //             </h3>
-                        //             <p className="text-sm text-gray-500">By {blog.author.name}</p>
-                        //         </div>
-                        //         <button
-                        //             disabled={likeLoading}
-                        //             onClick={() => likePost(blog)}
-                        //             className="flex items-center space-x-1 text-red-500 hover:text-red-600 transition-colors"
-                        //         >
-                        //             <img
-                        //                 src={
-                        //                     blog.likes.some((like) => like._id === user._id)
-                        //                         ? "./heart-fill.svg"
-                        //                         : "./heart.svg"
-                        //                 }
-                        //                 alt="like"
-                        //                 className="w-6 h-6"
-                        //             />
-                        //             <span className="text-lg font-medium">{blog.likes.length}</span>
-                        //         </button>
-                        //     </div>
-                        //     <p className="mt-4 text-gray-700">{blog.description}</p>
-                        //     <form
-                        //         onSubmit={(e) => addComment(e, blog._id)}
-                        //         className="flex items-center mt-6 space-x-2"
-                        //     >
-                        //         <input
-                        //             name="comment"
-                        //             required
-                        //             placeholder="Add a comment..."
-                        //             className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                        //         />
-                        //         <button
-                        //             type="submit"
-                        //             disabled={commentLoading}
-                        //             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 disabled:opacity-50"
-                        //         >
-                        //             Add
-                        //         </button>
-                        //     </form>
-                        //     <div className="mt-4">
-                        //         {blog.comments?.length > 0 && (
-                        //             <h4 className="font-medium text-gray-800">Comments:</h4>
-                        //         )}
-                        //         {blog.comments?.map((comment) => (
-                        //             <div
-                        //                 key={comment._id}
-                        //                 className="mt-2 px-4 py-2 bg-gray-100 rounded-md"
-                        //             >
-                        //                 <p>
-                        //                     {comment.text}{" "}
-                        //                     <span className="text-sm text-gray-500">
-                        //                         - {comment.author.name}
-                        //                     </span>
-                        //                 </p>
-                        //             </div>
-                        //         ))}
-                        //     </div>
-                        // </div>
                     ))}
                 </div>
             </div>

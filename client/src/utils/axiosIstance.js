@@ -24,8 +24,7 @@ instance.interceptors.request.use(async (req) => {
                 }))
                 req.headers.authorization = data.accessToken
             } catch (error) {
-                localStorage.clear("accessToken")
-                localStorage.clear("user")
+                localStorage.clear()
                 useNavigate("./")
             }
 

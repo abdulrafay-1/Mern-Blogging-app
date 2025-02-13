@@ -19,8 +19,7 @@ const ProtectedRoute = ({ children }) => {
                 logout()
             }
         } else {
-            localStorage.removeItem("authTokens");
-            localStorage.removeItem("user");
+            localStorage.clear()
             navigate("/login")
         }
     }

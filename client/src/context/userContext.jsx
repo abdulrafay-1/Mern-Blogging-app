@@ -8,15 +8,18 @@ const useUser = () => {
 }
 
 const UserProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(() => {
+        const localUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+        return localUser
+    });
     const [blogs, setBlogs] = useState(null);
 
-    useEffect(() => {
-        const localUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
-        if (localUser) {
-            setUser(localUser)
-        }
-    }, [])
+    // useEffect(() => {
+    //     const localUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+    //     if (localUser) {
+    //         setUser(localUser)
+    //     }
+    // }, [])
 
     return (
         <UserContext.Provider value={{ user, blogs, setBlogs, setUser }} >

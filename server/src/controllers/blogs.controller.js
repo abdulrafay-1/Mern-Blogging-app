@@ -28,6 +28,21 @@ const addBlog = async (req, res) => {
     }
 }
 
+const deleteBlog = async (req, res) => {
+    const { id } = req.params;
+    try {
+        if (!mongoose.isValidObjectId(id)) return res.json({ message: "Not a valid ID" })
+        const deletedBlog = await Blog.findByIdAndDelete(id)
+        if (!deletedBlog) return res.status(404).json({ message: "Blog not found" })
+        res.json({ message: "Blog deleted successfully", deletedBlog })
+    } catch (error) {
+        res.status(500).json({
+            message: "Internal server error",
+            error
+        })
+    }
+}
+
 const getAllBlogs = async (req, res) => {
     try {
         const blogs = await Blog.find({}).sort([['updatedAt', 'descending']])
@@ -121,4 +136,4 @@ const commentBlog = async (req, res) => {
     });
 }
 
-export { addBlog, getUserBlogs, likeBlog, commentBlog, getAllBlogs }
+export { addBlog, getUserBlogs, likeBlog, commentBlog, getAllBlogs, deleteBlog }

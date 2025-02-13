@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react'
 import { useUser } from '../context/userContext'
 
-const BlogCard = ({ blog, likeBlogFnc, commmentBlogFnc, likeLoading, commentLoading }) => {
+const BlogCard = ({ blog, likeBlogFnc, deleteBlogFnc, commmentBlogFnc, likeLoading, commentLoading }) => {
     const { user } = useUser();
-
     return (
         <div className="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg max-w-screen-md mx-auto">
             {/* Posted By Section */}
-            <div className="mx-3 mb-0 border-b border-slate-200 pt-3 pb-2 px-1">
+            <div className="mx-3 flex justify-between mb-0 border-b border-slate-200 pt-3 pb-2 px-1">
                 <span className="text-sm text-slate-600 font-medium">
-                    Posted by: {blog.author.name}
+                    Posted by: {blog.author._id === user._id ? "You" : blog.author.name}
                 </span>
+                {blog.author._id === user._id && <span className='cursor-pointer' onClick={() => deleteBlogFnc(blog._id)}>
+                    <img src="./trash.svg" className='w-5 h-5' alt="" />
+                </span>}
             </div>
 
             {/* Blog Content */}
